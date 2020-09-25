@@ -20,8 +20,8 @@
 import logging
 
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator, get_current_context, task
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator, get_current_context, task
 from airflow.utils.dates import days_ago
 
 log = logging.getLogger(__name__)

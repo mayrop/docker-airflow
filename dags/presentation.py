@@ -5,7 +5,7 @@ http://airflow.readthedocs.org/en/latest/tutorial.html
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
-import airflow.hooks.S3_hook
+# import airflow.hooks.S3_hook
 from datetime import datetime, timedelta
 import time
 

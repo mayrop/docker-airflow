@@ -21,7 +21,7 @@ import time
 from pprint import pprint
 
 from airflow import DAG
-from airflow.operators.python import PythonOperator, PythonVirtualenvOperator
+from airflow.operators.python_operator import PythonOperator, PythonVirtualenvOperator
 from airflow.utils.dates import days_ago
 
 args = {
