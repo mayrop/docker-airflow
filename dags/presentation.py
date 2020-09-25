@@ -4,13 +4,15 @@ http://airflow.readthedocs.org/en/latest/tutorial.html
 """
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
+import airflow.hooks.S3_hook
 from datetime import datetime, timedelta
-
+import time
 
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime(2020, 9, 15),
+    "start_date": datetime(2020, 9, 1),
     "email": ["airflow@airflow.com"],
     "email_on_failure": False,
     "email_on_retry": False,
@@ -44,5 +46,35 @@ t3 = BashOperator(
     dag=dag,
 )
 
+def print_context(ds, **kwargs):
+    print("PRINTING THE CONTEXT!!")
+    print(kwargs['random_base'])
+    return 'Whatever you return gets printed in the logs'
+
+t4 = PythonOperator(
+    task_id='print_the_context',
+    provide_context=True,
+    python_callable=print_context,
+    op_kwargs={'random_base': 'mytest-task'},
+    dag=dag,
+)
+
 t2.set_upstream(t1)
 t3.set_upstream(t1)
+t4.set_upstream(t2)
+
+# def upload_file_to_S3_with_hook(filename, key, bucket_name):
+#     hook = airflow.hooks.S3_hook.S3Hook('s3_challenge')
+#     hook.load_file(filename, key, bucket_name)
+
+# s3_task = PythonOperator(
+#     task_id='upload_to_S3',
+#     python_callable=upload_file_to_S3_with_hook,
+#     op_kwargs={
+#         'filename': '/test.csv',
+#         'key': 'files/test.csv',
+#         'bucket_name': 'challenge-airflow',
+#     },
+#     dag=dag)
+
+# s3_task.set_upstream(t1)
